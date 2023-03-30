@@ -30,23 +30,35 @@ app.post("/subscribe", (req, res) => {
 });
 
 app.post("/send", (req, res) => {
-  const { title, body } = req.body;
-  console.log({
+  const { 
     title,
-    body
-  });
+    body,
+    link = "http://localhost:3000/scholarships",
+    imageUrl = "https://www.umn.ac.id/wp-content/uploads/2022/06/BEASISWA-1125x675.jpeg"
+  } = req.body;
+  
   const message = {
     notification: {
       title,
-      body
+      body,
+      image: imageUrl,
+    },
+    webpush: {
+      fcm_options: {
+        link,
+      },
+      notification: {
+        title,
+        body,
+        image: imageUrl,
+      },
     },
     topic: "beasiswa-indonesia"
   };
   messaging.send(message)
     .then((response) => {
       console.log('Successfully sent message:', response);
-    }
-    )
+    })
     .catch((error) => {
       console.log('Error sending message:', error);
     });
