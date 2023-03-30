@@ -12,7 +12,12 @@ const firebaseApp = admin.initializeApp({
 
 const app = express();
 
-app.use(cors())
+const corsOptions = {
+  origin: "https://enchanting-valkyrie.netlify.app",
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 const messaging = admin.messaging(firebaseApp)
 
