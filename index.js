@@ -28,9 +28,11 @@ app.post("/subscribe", (req, res) => {
   messaging.subscribeToTopic([token], 'beasiswa-indonesia')
     .then((response) => {
       console.log('Successfully subscribed to topic:', response);
+      res.json({ message: "Subscribed" })
     })
     .catch((error) => {
       console.log('Error subscribing to topic:', error);
+      res.json({ message: "Error" })
     });
 });
 
@@ -63,9 +65,11 @@ app.post("/send", (req, res) => {
   messaging.send(message)
     .then((response) => {
       console.log('Successfully sent message:', response);
+      res.json({ message: "Success" })
     })
     .catch((error) => {
       console.log('Error sending message:', error);
+      res.json({ message: "Error" })
     });
 });
 
