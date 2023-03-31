@@ -13,7 +13,7 @@ const firebaseApp = admin.initializeApp({
 const app = express();
 
 const corsOptions = {
-  origin: "https://enchanting-valkyrie.netlify.app",
+  origin: "*",
   optionsSuccessStatus: 200
 };
 
