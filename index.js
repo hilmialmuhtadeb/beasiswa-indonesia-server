@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const webpush = require("web-push");
 const bodyParser = require("body-parser");
 const admin = require("firebase-admin");
 const serviceAccount = require("../service-account-file.json");
@@ -14,8 +13,10 @@ const app = express();
 
 const corsOptions = {
   origin: "*",
-  optionsSuccessStatus: 200
-};
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
