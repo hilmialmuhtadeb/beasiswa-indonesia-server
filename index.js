@@ -21,19 +21,29 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 const messaging = admin.messaging(firebaseApp)
+const firestore = admin.firestore(firebaseApp)
 
 // Subscribe Route
-app.post("/subscribe", (req, res) => {
-  const { token } = req.body;
-  console.log(token);
-  messaging.subscribeToTopic([token], 'beasiswa-indonesia')
+app.post("/subscribe", async (req, res) => {
+  const { token, topic } = req.body;
+  await firestore.collection("subscription").add({
+    token,
+    topic,
+  })
+  messaging.subscribeToTopic([token], topic)
     .then((response) => {
-      console.log('Successfully subscribed to topic:', response);
-      res.json({ message: "Subscribed" })
+      console.log('Successfully subscribed to topic: ', response);
+      res.json({
+        message: "Berhasil subscribe ke topik: " + topic,
+        status: 200
+      })
     })
     .catch((error) => {
-      console.log('Error subscribing to topic:', error);
-      res.json({ message: "Error" })
+      console.log('Error subscribing to topic: ', error);
+      res.json({
+        message: "Gagal subscribe ke topik: " + topic,
+        status: 500
+      })
     });
 });
 
@@ -42,7 +52,8 @@ app.post("/send", (req, res) => {
     title,
     body,
     link = "http://localhost:3000/scholarships",
-    imageUrl = "https://www.umn.ac.id/wp-content/uploads/2022/06/BEASISWA-1125x675.jpeg"
+    imageUrl = "https://www.umn.ac.id/wp-content/uploads/2022/06/BEASISWA-1125x675.jpeg",
+    topic= "beasiswa-indonesia"
   } = req.body;
   
   const message = {
@@ -61,16 +72,22 @@ app.post("/send", (req, res) => {
         image: imageUrl,
       },
     },
-    topic: "beasiswa-indonesia"
+    topic
   };
   messaging.send(message)
     .then((response) => {
       console.log('Successfully sent message:', response);
-      res.json({ message: "Success" })
+      res.json({
+        message: "Berhasil mengirim notifikasi ke topik: " + topic,
+        status: 200
+      })
     })
     .catch((error) => {
       console.log('Error sending message:', error);
-      res.json({ message: "Error" })
+      res.json({
+        message: "Gagal mengirim notifikasi ke topik: " + topic,
+        status: 500
+      })
     });
 });
 
