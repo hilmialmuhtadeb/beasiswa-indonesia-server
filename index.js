@@ -47,21 +47,35 @@ app.post("/subscribe", async (req, res) => {
     });
 });
 
+app.post("/unsubscribe", async (req, res) => {
+  const { token, topic } = req.body;
+  messaging.unsubscribeFromTopic(token, topic)
+    .then((response) => {
+      console.log('Successfully unsubscribed from topic: ', response);
+      res.json({
+        message: "Berhasil unsubscribe dari topik: " + topic,
+        status: 200
+      })
+    })
+    .catch((error) => {
+      console.log('Error unsubscribing from topic: ', error);
+      res.json({
+        message: "Gagal unsubscribe dari topik: " + topic,
+        status: 500
+      })
+    });
+});
+
 app.post("/send", (req, res) => {
   const { 
     title,
     body,
-    link = "http://localhost:3000/scholarships",
+    link = "http://beasiswa-indonesia.netlify.app/scholarships",
     imageUrl = "https://www.umn.ac.id/wp-content/uploads/2022/06/BEASISWA-1125x675.jpeg",
     topic= "beasiswa-indonesia"
   } = req.body;
   
   const message = {
-    notification: {
-      title,
-      body,
-      image: imageUrl,
-    },
     webpush: {
       fcm_options: {
         link,
